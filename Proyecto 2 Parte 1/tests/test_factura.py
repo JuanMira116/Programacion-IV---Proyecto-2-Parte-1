@@ -3,27 +3,25 @@ import pytest
 from decimal import Decimal
 from datetime import date
 from modelo.factura import Factura
-from modelo.item_factura import ItemFactura
 from modelo.producto import Producto
 
 def test_creacion_factura_valida():
     f = Factura(date.today())
-    assert f.total == Decimal("0.00")
-    assert f.items == []
+    assert f.valor_total == Decimal("0.00")
+    assert f.productos == []
 
-def test_agregar_item_valido():
+def test_agregar_producto_valido():
     f = Factura(date.today())
     p = Producto("Vacuna", Decimal("10.00"))
-    item = ItemFactura(p, 3)
-    f.agregar_item(item)
-    assert f.total == Decimal("30.00")
-    assert len(f.items) == 1
+    f.agregar_producto(p)
+    assert len(f.productos) == 1
+    assert f.valor_total == Decimal("10.00")
 
 def test_fecha_invalida():
     with pytest.raises(ValueError):
-        Factura("2025-01-01") 
+        Factura("2025-01-01")
 
-def test_agregar_item_invalido():
+def test_agregar_producto_invalido():
     f = Factura(date.today())
     with pytest.raises(TypeError):
-        f.agregar_item("no_item")
+        f.agregar_producto("no_producto")

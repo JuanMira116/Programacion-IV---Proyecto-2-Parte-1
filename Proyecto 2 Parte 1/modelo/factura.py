@@ -1,29 +1,31 @@
 
 from decimal import Decimal
 from datetime import date
-from .item_factura import ItemFactura
+from .producto import Producto
 
 class Factura:
     def __init__(self, fecha: date):
         if not isinstance(fecha, date):
-            raise ValueError("La fecha es obligatoria.")
-        self.fecha = fecha
-        self._items = []
-        self._total = Decimal("0.00")
+            raise ValueError("La fecha es obligatoria y debe ser un objeto tipo date.")
+        self._fecha = fecha
+        self._productos = []
 
-    def agregar_item(self, item: ItemFactura):
-        if not isinstance(item, ItemFactura):
-            raise TypeError("Debe agregar un objeto de tipo ItemFactura.")
-        self._items.append(item)
-        self._recalcular_total()
-
-    def _recalcular_total(self):
-        self._total = sum((item.total for item in self._items), Decimal("0.00"))
+    def agregar_producto(self, producto: Producto):
+        if not isinstance(producto, Producto):
+            raise TypeError("Debe agregar un objeto de tipo Producto.")
+        self._productos.append(producto)
 
     @property
-    def total(self):
-        return self._total
+    def fecha(self):
+        return self._fecha
 
     @property
-    def items(self):
-        return list(self._items)
+    def productos(self):
+        return list(self._productos)
+
+    @property
+    def valor_total(self):
+        return sum((p.precio for p in self._productos), Decimal("0.00"))
+
+    def __repr__(self):
+        return f"Factura ({self._fecha}) - Total: ${self.valor_total:.2f}"

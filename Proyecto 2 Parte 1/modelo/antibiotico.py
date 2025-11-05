@@ -1,14 +1,25 @@
 
 from decimal import Decimal
 from .producto import Producto
-from .tipo_animal import TipoAnimal
 
 class Antibiotico(Producto):
-    def __init__(self, nombre: str, dosis_kg: int, tipo_animal: TipoAnimal, precio: Decimal):
+    def __init__(self, nombre: str, dosis: float, tipo_animal: str, precio: Decimal):
         super().__init__(nombre, precio)
-        if dosis_kg < 400 or dosis_kg > 600:
+
+        if not isinstance(dosis, (int, float)):
+            raise ValueError("La dosis debe ser un número.")
+        if dosis < 400 or dosis > 600:
             raise ValueError("La dosis debe estar entre 400Kg y 600Kg.")
-        if not isinstance(tipo_animal, TipoAnimal):
-            raise ValueError("El tipo de animal debe ser un valor del enum TipoAnimal.")
-        self.dosis_kg = dosis_kg
-        self.tipo_animal = tipo_animal
+        self._dosis = dosis
+
+        if tipo_animal not in ["Bovino", "Caprino", "Porcino"]:
+            raise ValueError("El tipo de animal debe ser 'Bovino', 'Caprino' o 'Porcino'.")
+        self._tipo_animal = tipo_animal
+
+    @property
+    def dosis(self):
+        return self._dosis
+
+    @property
+    def tipo_animal(self):
+        return self._tipo_animal
